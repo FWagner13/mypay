@@ -35,5 +35,4 @@ public class Transfer {
     @ManyToOne
     @JoinColumn(name = "to_account_id", nullable = false)
     private Account toAccount;
-    
 }
