@@ -1,26 +1,25 @@
 package com.mypay.domain;
 
-import com.mypay.user.UserType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mypay.dto.NewAccountDTO;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity(name = "users")
 @Table(name = "users")
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
@@ -30,8 +29,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JsonIgnore
+    @OneToOne(mappedBy = "user")
     private Account account;
 
     private String firstName;
@@ -46,6 +45,11 @@ public class User {
 
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private UserType type;
+    public User(NewAccountDTO account) {
+        this.firstName = account.firstName();
+        this.lastName = account.lastName();
+        this.cpfCnpj = account.cpfCnpj();
+        this.email = account.email();
+        this.password = account.password();
+    }
 }
